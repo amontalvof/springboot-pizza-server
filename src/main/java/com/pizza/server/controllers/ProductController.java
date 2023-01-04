@@ -51,7 +51,6 @@ public class ProductController {
     @RequestMapping(method = RequestMethod.GET, value = "/api/products", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Product> readProducts() {
         List<Product> products = productService.readProducts();
-        System.out.println("Products: " + products);
         return products;
     }
 

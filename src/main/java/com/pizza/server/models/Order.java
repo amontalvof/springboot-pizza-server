@@ -2,12 +2,16 @@ package com.pizza.server.models;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
@@ -18,39 +22,49 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 @Entity
 @Table(name = "orders")
 @ToString
 @NoArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
+    @NonNull
     @NotBlank(message = "Customer is required")
-    @Size(min = 1, max = 60, message = "Customer must be between 1 and 60 characters")
-    @Column(name = "customer", length = 60, nullable = false)
+    @Size(min = 3, max = 20, message = "Customer must be between 3 and 20 characters")
+    @Column(name = "customer", length = 20, nullable = false)
     private String customer;
 
+    @NonNull
+    @NotBlank(message = "Phone is required")
+    @Pattern(regexp = "^\\s*(?:\\+?(\\d{1,3}))?[-. (]*(\\d{3})[-. )]*(\\d{3})[-. ]*(\\d{4})(?: *x(\\d+))?\\s*$", message = "Invalid phone number")
+    @Column(name = "phone", length = 20, nullable = false)
+    private String phone;
+
+    @NonNull
     @NotBlank(message = "Address is required")
-    @Size(min = 1, max = 200, message = "Address must be between 1 and 200 characters")
+    @Size(min = 5, max = 200, message = "Address must be between 5 and 200 characters")
     @Column(name = "address", length = 200, nullable = false)
     private String address;
 
+    @NonNull
     @Column(name = "total", precision = 10, scale = 2, nullable = false)
     @Digits(integer = 10, fraction = 2)
     @DecimalMin("0.00")
     private BigDecimal total;
 
     @Column(name = "status", nullable = false)
-    @Pattern(regexp = "PAYMENT|PREPARING|ON_THE_WAY|DELIVERED", message = "Status must match PAYMENT|PREPARING|ON_THE_WAY|DELIVERED")
-    private String status = "PAYMENT";
+    @Pattern(regexp = "PREPARING|ON_THE_WAY|DELIVERED|PAYMENT", message = "Status must match PAYMENT|PREPARING|ON_THE_WAY|DELIVERED")
+    private String status = "PREPARING";
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -59,6 +73,10 @@ public class Order {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    @ManyToMany
+    @JoinTable(name = "orders_products", joinColumns = @JoinColumn(name = "order_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id"))
+    private Set<Product> products;
 
     // *************************** Getters and Setters ***************************
 
@@ -76,6 +94,14 @@ public class Order {
 
     public void setCustomer(String customer) {
         this.customer = customer;
+    }
+
+    public String getPhone() {
+        return this.phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getAddress() {
@@ -116,6 +142,14 @@ public class Order {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Set<Product> getProducts() {
+        return this.products;
+    }
+
+    public void setProducts(Set<Product> products) {
+        this.products = products;
     }
 
 }

@@ -2,6 +2,7 @@ package com.pizza.server.models;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -9,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -16,6 +18,8 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.NonNull;
 import lombok.NoArgsConstructor;
@@ -64,6 +68,10 @@ public class Product {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<ExtraOption> extraOptions;
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "products")
+    private Set<Order> orders;
 
     // *************************** Getters and Setters ***************************
 
@@ -129,6 +137,14 @@ public class Product {
 
     public void setExtraOptions(List<ExtraOption> extraOptions) {
         this.extraOptions = extraOptions;
+    }
+
+    public Set<Order> getOrders() {
+        return this.orders;
+    }
+
+    public void setOrders(Set<Order> orders) {
+        this.orders = orders;
     }
 
 }
