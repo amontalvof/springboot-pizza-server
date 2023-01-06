@@ -2,16 +2,13 @@ package com.pizza.server.models;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
@@ -20,7 +17,10 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.UpdateTimestamp;
+import com.vladmihalcea.hibernate.type.json.JsonType;
 
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -29,6 +29,7 @@ import lombok.ToString;
 
 @Entity
 @Table(name = "orders")
+@TypeDef(name = "json", typeClass = JsonType.class)
 @ToString
 @NoArgsConstructor
 @RequiredArgsConstructor
@@ -74,11 +75,20 @@ public class Order {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    @ManyToMany
-    @JoinTable(name = "orders_products", joinColumns = @JoinColumn(name = "order_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id"))
-    private Set<Product> products;
+    @NonNull
+    @Type(type = "json")
+    @Column(name = "products_json", columnDefinition = "json", nullable = false)
+    private List products;
 
     // *************************** Getters and Setters ***************************
+
+    public List getProducts() {
+        return this.products;
+    }
+
+    public void setProducts(List products) {
+        this.products = products;
+    }
 
     public Long getId() {
         return this.id;
@@ -142,14 +152,6 @@ public class Order {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
-    }
-
-    public Set<Product> getProducts() {
-        return this.products;
-    }
-
-    public void setProducts(Set<Product> products) {
-        this.products = products;
     }
 
 }

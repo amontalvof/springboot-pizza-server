@@ -6,21 +6,21 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class ErrorResponse {
-    private List<String> messages;
+    private List<String> errorMessages;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private LocalDateTime date;
 
-    public ErrorResponse(List<String> messages) {
-        this.messages = messages;
+    public ErrorResponse(List<String> errorMessages) {
+        this.errorMessages = errorMessages;
         this.date = LocalDateTime.now();
     }
 
-    public List<String> getMessages() {
-        return this.messages;
+    public List<String> getErrorMessages() {
+        return this.errorMessages;
     }
 
-    public void setMessages(List<String> messages) {
-        this.messages = messages;
+    public void setErrorMessages(List<String> errorMessages) {
+        this.errorMessages = errorMessages;
     }
 
     public LocalDateTime getDate() {

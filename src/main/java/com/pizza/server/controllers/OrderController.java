@@ -65,10 +65,15 @@ public class OrderController {
         return new ResponseEntity<>(storedOrder, HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/orders/{orderId}/products/{productId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Order> updateOrder(@PathVariable Long orderId,
-            @PathVariable Long productId) {
-        Order storedOrder = orderService.addProductToOrder(orderId, productId);
+    @Operation(summary = "Update an order")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "404", description = "Order doesn't exist", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "200", description = "Successful update of an order", content = @Content(schema = @Schema(implementation = Order.class))),
+    })
+    @RequestMapping(method = RequestMethod.PUT, value = "/orders/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Order> updateOrder(@RequestBody @Valid Order order, @PathVariable Long id) {
+        Order storedOrder = orderService.updateOrder(id, order);
         return new ResponseEntity<>(storedOrder, HttpStatus.OK);
     }
+
 }
