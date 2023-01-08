@@ -79,6 +79,7 @@ public class ProductControllerTest {
     void testCreateProductSuccess() throws Exception {
         RequestBuilder request = MockMvcRequestBuilders.post("/api/products")
                 .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Basic QWRtaW5pc3RyYXRvcjpQQHNzd29yZDEyMw==")
                 .content(
                         "{\"title\":\"Pizza Funghi\",\"description\":\"Tomato sauce, mozzarella, mushrooms\",\"img\":\"http://localhost/img.png\",\"prices\":\"[9,19,29]\"}");
         mockMvc.perform(request).andExpect(status().isCreated())
@@ -90,7 +91,9 @@ public class ProductControllerTest {
     @Test
     void testCreateProductBadRequest() throws Exception {
         RequestBuilder request = MockMvcRequestBuilders.post("/api/products")
-                .contentType(MediaType.APPLICATION_JSON).content("{\"title\":\"Pizza Funghi\"}");
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Basic QWRtaW5pc3RyYXRvcjpQQHNzd29yZDEyMw==")
+                .content("{\"title\":\"Pizza Funghi\"}");
         mockMvc.perform(request).andExpect(status().isBadRequest());
     }
 
@@ -98,6 +101,7 @@ public class ProductControllerTest {
     void testUpdateProductSuccess() throws Exception {
         RequestBuilder request = MockMvcRequestBuilders.put("/api/products/3")
                 .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Basic QWRtaW5pc3RyYXRvcjpQQHNzd29yZDEyMw==")
                 .content(
                         "{\"title\":\"Pizza Funghi\",\"description\":\"Tomato sauce, mozzarella, mushrooms\",\"img\":\"http://localhost/img.png\",\"prices\":\"[9,19,29]\"}");
         mockMvc.perform(request).andExpect(status().isOk())
@@ -110,6 +114,7 @@ public class ProductControllerTest {
     void testUpdateProductNotFound() throws Exception {
         RequestBuilder request = MockMvcRequestBuilders.put("/api/products/100")
                 .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Basic QWRtaW5pc3RyYXRvcjpQQHNzd29yZDEyMw==")
                 .content(
                         "{\"title\":\"Pizza Funghi\",\"description\":\"Tomato sauce, mozzarella, mushrooms\",\"img\":\"http://localhost/img.png\",\"prices\":\"[9,19,29]\"}");
         mockMvc.perform(request).andExpect(status().isNotFound());
@@ -118,19 +123,23 @@ public class ProductControllerTest {
     @Test
     void testUpdateProductBadRequest() throws Exception {
         RequestBuilder request = MockMvcRequestBuilders.put("/api/products/3")
-                .contentType(MediaType.APPLICATION_JSON).content("{\"title\":\"Pizza Funghi\"}");
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Basic QWRtaW5pc3RyYXRvcjpQQHNzd29yZDEyMw==")
+                .content("{\"title\":\"Pizza Funghi\"}");
         mockMvc.perform(request).andExpect(status().isBadRequest());
     }
 
     @Test
     void testDeleteProductSuccess() throws Exception {
-        RequestBuilder request = MockMvcRequestBuilders.delete("/api/products/2");
+        RequestBuilder request = MockMvcRequestBuilders.delete("/api/products/2").header("Authorization",
+                "Basic QWRtaW5pc3RyYXRvcjpQQHNzd29yZDEyMw==");
         mockMvc.perform(request).andExpect(status().isOk());
     }
 
     @Test
     void testDeleteProductNotFound() throws Exception {
-        RequestBuilder request = MockMvcRequestBuilders.delete("/api/products/100");
+        RequestBuilder request = MockMvcRequestBuilders.delete("/api/products/100").header("Authorization",
+                "Basic QWRtaW5pc3RyYXRvcjpQQHNzd29yZDEyMw==");
         mockMvc.perform(request).andExpect(status().isNotFound());
     }
 }

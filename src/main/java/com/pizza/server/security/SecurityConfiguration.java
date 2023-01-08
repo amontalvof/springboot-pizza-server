@@ -26,7 +26,7 @@ public class SecurityConfiguration {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.DELETE).hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/api/orders").permitAll()
-                .antMatchers(HttpMethod.POST, "/**").denyAll()
+                // .antMatchers(HttpMethod.POST, "/**").denyAll()
                 .antMatchers(HttpMethod.PUT).hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET).permitAll()
                 .anyRequest()
