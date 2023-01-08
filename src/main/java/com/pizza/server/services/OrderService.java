@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import org.springframework.data.domain.Sort;
+
 import com.pizza.server.models.Order;
 import com.pizza.server.repositories.OrderRepository;
 import com.pizza.server.utils.Helpers;
@@ -22,7 +24,7 @@ public class OrderService {
 
     public List<Order> readOrders() {
         List<Order> orders = new ArrayList<>();
-        orderRepository.findAll().forEach(orders::add);
+        orderRepository.findAll(Sort.by(Sort.Direction.ASC, "id")).forEach(orders::add);
         return orders;
     }
 
